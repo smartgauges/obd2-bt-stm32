@@ -14,6 +14,7 @@ enum e_log_level
 	e_log_all
 };
 
+#pragma pack(1)
 typedef struct msg_t
 {
 	uint8_t len;
@@ -82,6 +83,7 @@ enum e_msg_types
 	e_type_debug,
 	e_type_unknown,
 };
+#pragma pack()
 
 #endif
 
