@@ -1,0 +1,694 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>can</class>
+ <widget class="QMainWindow" name="can">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>490</width>
+    <height>560</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>can</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout_4">
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QFrame" name="frame">
+        <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout_5">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QToolButton" name="btn_start">
+           <property name="text">
+            <string>...</string>
+           </property>
+           <property name="icon">
+            <iconset resource="resources.qrc">
+             <normaloff>:/images/pause.png</normaloff>:/images/pause.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>48</width>
+             <height>48</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="label">
+           <property name="text">
+            <string>State:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="lbl_state">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <widget class="QStackedWidget" name="stack">
+      <widget class="wdg_bt_t" name="bt"/>
+      <widget class="wdg_com_t" name="com"/>
+      <widget class="QWidget" name="page_info">
+       <layout class="QVBoxLayout" name="verticalLayout_8">
+        <item>
+         <widget class="QTabWidget" name="tab">
+          <property name="currentIndex">
+           <number>0</number>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>48</width>
+            <height>48</height>
+           </size>
+          </property>
+          <widget class="QWidget" name="tab_rx">
+           <attribute name="icon">
+            <iconset resource="resources.qrc">
+             <normaloff>:/images/canrx.png</normaloff>:/images/canrx.png</iconset>
+           </attribute>
+           <attribute name="title">
+            <string/>
+           </attribute>
+           <layout class="QVBoxLayout" name="verticalLayout_2">
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_2">
+              <item>
+               <widget class="QLabel" name="label_2">
+                <property name="text">
+                 <string>IDs:</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QComboBox" name="cb_rx_id">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_4">
+                <property name="text">
+                 <string>Rx:</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="lbl_rx">
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_3">
+                <property name="text">
+                 <string>Err:</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="lbl_err">
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_2">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QToolButton" name="btn_save">
+                <property name="text">
+                 <string>...</string>
+                </property>
+                <property name="icon">
+                 <iconset resource="resources.qrc">
+                  <normaloff>:/images/save.png</normaloff>:/images/save.png</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>48</width>
+                  <height>48</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <widget class="QTreeView" name="view"/>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="tab_tx">
+           <attribute name="icon">
+            <iconset resource="resources.qrc">
+             <normaloff>:/images/cantx.png</normaloff>:/images/cantx.png</iconset>
+           </attribute>
+           <attribute name="title">
+            <string/>
+           </attribute>
+           <layout class="QVBoxLayout" name="verticalLayout_3">
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_4">
+              <item>
+               <widget class="QLabel" name="label_9">
+                <property name="text">
+                 <string>Mode:</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QComboBox" name="cb_tx_mode">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_4">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>48</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <widget class="QStackedWidget" name="tx_stack">
+              <property name="currentIndex">
+               <number>0</number>
+              </property>
+              <widget class="QWidget" name="page_off"/>
+              <widget class="QWidget" name="page_file">
+               <layout class="QVBoxLayout" name="verticalLayout_5">
+                <item>
+                 <layout class="QHBoxLayout" name="horizontalLayout_3">
+                  <item>
+                   <widget class="QToolButton" name="btn_open">
+                    <property name="text">
+                     <string>...</string>
+                    </property>
+                    <property name="icon">
+                     <iconset resource="resources.qrc">
+                      <normaloff>:/images/open.png</normaloff>:/images/open.png</iconset>
+                    </property>
+                    <property name="iconSize">
+                     <size>
+                      <width>48</width>
+                      <height>48</height>
+                     </size>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="label_5">
+                    <property name="text">
+                     <string>Tx:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="lbl_tx">
+                    <property name="text">
+                     <string/>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <spacer name="horizontalSpacer_3">
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>40</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="label_6">
+                    <property name="text">
+                     <string>IDs:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QComboBox" name="cb_tx_id"/>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <spacer name="verticalSpacer">
+                  <property name="orientation">
+                   <enum>Qt::Vertical</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>20</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+               </layout>
+              </widget>
+              <widget class="QWidget" name="page_msg">
+               <layout class="QVBoxLayout" name="verticalLayout_6">
+                <item>
+                 <layout class="QGridLayout" name="gridLayout">
+                  <item row="2" column="6">
+                   <widget class="QSpinBox" name="sb_d6">
+                    <property name="maximum">
+                     <number>255</number>
+                    </property>
+                    <property name="displayIntegerBase">
+                     <number>16</number>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="1">
+                   <widget class="QSpinBox" name="sb_d1">
+                    <property name="maximum">
+                     <number>255</number>
+                    </property>
+                    <property name="displayIntegerBase">
+                     <number>16</number>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="0">
+                   <widget class="QSpinBox" name="sb_d0">
+                    <property name="maximum">
+                     <number>255</number>
+                    </property>
+                    <property name="displayIntegerBase">
+                     <number>16</number>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="5">
+                   <widget class="QSpinBox" name="sb_d5">
+                    <property name="maximum">
+                     <number>255</number>
+                    </property>
+                    <property name="displayIntegerBase">
+                     <number>16</number>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="4">
+                   <widget class="QSpinBox" name="sb_d4">
+                    <property name="maximum">
+                     <number>255</number>
+                    </property>
+                    <property name="displayIntegerBase">
+                     <number>16</number>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="7">
+                   <widget class="QSpinBox" name="sb_d7">
+                    <property name="maximum">
+                     <number>255</number>
+                    </property>
+                    <property name="displayIntegerBase">
+                     <number>16</number>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="3">
+                   <widget class="QSpinBox" name="sb_d3">
+                    <property name="maximum">
+                     <number>255</number>
+                    </property>
+                    <property name="displayIntegerBase">
+                     <number>16</number>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="2">
+                   <widget class="QSpinBox" name="sb_d2">
+                    <property name="maximum">
+                     <number>255</number>
+                    </property>
+                    <property name="displayIntegerBase">
+                     <number>16</number>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="2">
+                   <widget class="QLabel" name="label_7">
+                    <property name="text">
+                     <string>ID</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="0" colspan="2">
+                   <widget class="QComboBox" name="cb_select_tx_id"/>
+                  </item>
+                  <item row="1" column="3">
+                   <widget class="QSpinBox" name="sb_id">
+                    <property name="maximum">
+                     <number>2047</number>
+                    </property>
+                    <property name="displayIntegerBase">
+                     <number>16</number>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="5">
+                   <widget class="QLabel" name="label_8">
+                    <property name="text">
+                     <string>Len</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="6">
+                   <widget class="QSpinBox" name="sb_len">
+                    <property name="maximum">
+                     <number>255</number>
+                    </property>
+                    <property name="value">
+                     <number>8</number>
+                    </property>
+                    <property name="displayIntegerBase">
+                     <number>16</number>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <spacer name="verticalSpacer_2">
+                  <property name="orientation">
+                   <enum>Qt::Vertical</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>20</width>
+                    <height>369</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+               </layout>
+              </widget>
+              <widget class="QWidget" name="page_obd2">
+               <layout class="QGridLayout" name="gridLayout_3">
+                <item row="6" column="0">
+                 <widget class="QCheckBox" name="cb_oxygen1">
+                  <property name="text">
+                   <string>Oxygen sensor 1(0x14)</string>
+                  </property>
+                  <property name="checked">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item row="3" column="0">
+                 <widget class="QCheckBox" name="cb_rpm">
+                  <property name="text">
+                   <string>Rpm(0xc)</string>
+                  </property>
+                  <property name="checked">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item row="3" column="1">
+                 <widget class="QCheckBox" name="cb_speed">
+                  <property name="text">
+                   <string>Speed(0xd)</string>
+                  </property>
+                  <property name="checked">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item row="4" column="1">
+                 <widget class="QCheckBox" name="cb_intake_air_temp">
+                  <property name="text">
+                   <string>Intake air temp(0xf)</string>
+                  </property>
+                  <property name="checked">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item row="7" column="0">
+                 <widget class="QCheckBox" name="cb_air_pressure">
+                  <property name="text">
+                   <string>Air pressure(0x33)</string>
+                  </property>
+                  <property name="checked">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="1">
+                 <widget class="QCheckBox" name="cb_coolant">
+                  <property name="text">
+                   <string>Coolant temp(0x5)</string>
+                  </property>
+                  <property name="checked">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="0">
+                 <widget class="QCheckBox" name="cb_mab">
+                  <property name="text">
+                   <string>MAB(0xb)</string>
+                  </property>
+                  <property name="checked">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item row="7" column="1">
+                 <widget class="QCheckBox" name="cb_air_temp">
+                  <property name="text">
+                   <string>Air temp(0x46)</string>
+                  </property>
+                  <property name="checked">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item row="5" column="0">
+                 <widget class="QCheckBox" name="cb_maf">
+                  <property name="text">
+                   <string>MAF(0x10)</string>
+                  </property>
+                  <property name="checked">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item row="4" column="0">
+                 <widget class="QCheckBox" name="cb_timing">
+                  <property name="text">
+                   <string>Timing advance(0xe)</string>
+                  </property>
+                  <property name="checked">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item row="6" column="1">
+                 <widget class="QCheckBox" name="cb_oxygen2">
+                  <property name="text">
+                   <string>Oxygen sensor 2(0x15)</string>
+                  </property>
+                  <property name="checked">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item row="5" column="1">
+                 <widget class="QCheckBox" name="cb_throttle">
+                  <property name="text">
+                   <string>Throttle position(0x11)</string>
+                  </property>
+                  <property name="checked">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="0">
+                 <widget class="QCheckBox" name="cb_load">
+                  <property name="text">
+                   <string>Calc engine load(0x4)</string>
+                  </property>
+                  <property name="checked">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="0">
+                 <widget class="QCheckBox" name="cb_fuel_trim">
+                  <property name="text">
+                   <string>Short fuel trim(0x6)</string>
+                  </property>
+                  <property name="checked">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="1">
+                 <widget class="QCheckBox" name="cb_lfuel_trim">
+                  <property name="text">
+                   <string>Long fuel trim(0x7)</string>
+                  </property>
+                  <property name="checked">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+          <widget class="wdg_fw_t" name="tab_fw">
+           <attribute name="icon">
+            <iconset resource="resources.qrc">
+             <normaloff>:/images/fw.png</normaloff>:/images/fw.png</iconset>
+           </attribute>
+           <attribute name="title">
+            <string/>
+           </attribute>
+          </widget>
+          <widget class="QWidget" name="tab_log">
+           <attribute name="icon">
+            <iconset resource="resources.qrc">
+             <normaloff>:/images/log.png</normaloff>:/images/log.png</iconset>
+           </attribute>
+           <attribute name="title">
+            <string/>
+           </attribute>
+           <layout class="QVBoxLayout" name="verticalLayout">
+            <item>
+             <widget class="QPlainTextEdit" name="debug">
+              <property name="readOnly">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QStatusBar" name="status"/>
+  <action name="actionAbout">
+   <property name="text">
+    <string>About</string>
+   </property>
+  </action>
+  <action name="actionAboutQt">
+   <property name="text">
+    <string>About Qt</string>
+   </property>
+  </action>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>wdg_bt_t</class>
+   <extends>QWidget</extends>
+   <header>wdg_bt.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>wdg_fw_t</class>
+   <extends>QWidget</extends>
+   <header>wdg_fw.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>wdg_com_t</class>
+   <extends>QWidget</extends>
+   <header>wdg_com.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
+ <connections/>
+</ui>

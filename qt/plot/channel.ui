@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>channel</class>
+ <widget class="QWidget" name="channel">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>262</width>
+    <height>215</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="1" column="0">
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>Id</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QComboBox" name="combo_id">
+     <property name="sizeAdjustPolicy">
+      <enum>QComboBox::AdjustToContents</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1">
+    <widget class="QComboBox" name="combo_type"/>
+   </item>
+   <item row="4" column="0">
+    <widget class="QLabel" name="label_3">
+     <property name="text">
+      <string>Offset</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="QRadioButton" name="btn_en">
+     <property name="text">
+      <string>Enable</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0">
+    <widget class="QLabel" name="lbl_name">
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="0">
+    <widget class="QLabel" name="label_4">
+     <property name="text">
+      <string>Mul</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="1">
+    <widget class="QDoubleSpinBox" name="sbox_mul">
+     <property name="decimals">
+      <number>3</number>
+     </property>
+     <property name="value">
+      <double>1.000000000000000</double>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0">
+    <widget class="QLabel" name="label_2">
+     <property name="text">
+      <string>Type</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="1">
+    <widget class="QComboBox" name="combo_offset"/>
+   </item>
+   <item row="6" column="0">
+    <widget class="QLabel" name="label_6">
+     <property name="text">
+      <string>Add</string>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="1">
+    <widget class="QSpinBox" name="sbox_add">
+     <property name="minimum">
+      <number>-10000</number>
+     </property>
+     <property name="maximum">
+      <number>10000</number>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

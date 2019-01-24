@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>main</class>
+ <widget class="QMainWindow" name="main">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>351</width>
+    <height>325</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="wdg_bt_t" name="bt" native="true"/>
+    </item>
+    <item>
+     <widget class="QPlainTextEdit" name="log"/>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QStatusBar" name="status"/>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>wdg_bt_t</class>
+   <extends>QWidget</extends>
+   <header>wdg_bt.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

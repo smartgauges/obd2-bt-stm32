@@ -1,0 +1,19 @@
+<RCC>
+  <qresource prefix="/">
+    <file>images/fw.png</file>
+    <file>images/menu.png</file>
+    <file>images/usb.png</file>
+    <file>images/bt.png</file>
+    <file>images/cantx.png</file>
+    <file>images/canrx.png</file>
+    <file>images/log.png</file>
+    <file>images/obd2.png</file>
+    <file>images/can.png</file>
+    <file>images/start.png</file>
+    <file>images/pause.png</file>
+    <file>images/open.png</file>
+    <file>images/save.png</file>
+    <file>images/reset.png</file>
+    <file>images/erase.png</file>
+  </qresource>
+</RCC>

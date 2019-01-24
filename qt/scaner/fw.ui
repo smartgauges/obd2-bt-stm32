@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>fw</class>
+ <widget class="QWidget" name="fw">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>690</width>
+    <height>472</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>fw</string>
+  </property>
+  <layout class="QHBoxLayout" name="horizontalLayout">
+   <property name="leftMargin">
+    <number>2</number>
+   </property>
+   <property name="topMargin">
+    <number>2</number>
+   </property>
+   <property name="rightMargin">
+    <number>2</number>
+   </property>
+   <property name="bottomMargin">
+    <number>2</number>
+   </property>
+   <item>
+    <widget class="QFrame" name="frame">
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_4">
+        <item>
+         <widget class="QToolButton" name="btn_open">
+          <property name="text">
+           <string>...</string>
+          </property>
+          <property name="icon">
+           <iconset resource="resources.qrc">
+            <normaloff>:/images/open.png</normaloff>:/images/open.png</iconset>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>48</width>
+            <height>48</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QToolButton" name="btn_flash">
+          <property name="text">
+           <string>...</string>
+          </property>
+          <property name="icon">
+           <iconset resource="resources.qrc">
+            <normaloff>:/images/start.png</normaloff>:/images/start.png</iconset>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>48</width>
+            <height>48</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QToolButton" name="btn_erase">
+          <property name="text">
+           <string>...</string>
+          </property>
+          <property name="icon">
+           <iconset resource="resources.qrc">
+            <normaloff>:/images/erase.png</normaloff>:/images/erase.png</iconset>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>48</width>
+            <height>48</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QToolButton" name="btn_rst">
+          <property name="text">
+           <string>...</string>
+          </property>
+          <property name="icon">
+           <iconset resource="resources.qrc">
+            <normaloff>:/images/reset.png</normaloff>:/images/reset.png</iconset>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>48</width>
+            <height>48</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QProgressBar" name="pb">
+          <property name="value">
+           <number>0</number>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer_2">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <spacer name="verticalSpacer">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
+ <connections/>
+</ui>
