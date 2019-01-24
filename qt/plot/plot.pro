@@ -14,7 +14,7 @@ RESOURCES += resources.qrc
 win32 {
 
 	CONFIG += static
-	CONFIG += console
+	#CONFIG += console
 	QMAKE_LFLAGS += -static -static-libgcc
 }
 
