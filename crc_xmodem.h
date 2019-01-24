@@ -3,6 +3,10 @@
 
 #include <stdint.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** CRC-XMODEM calculation.
  *
  * Polynomial: x^16 + x^12 + x^5 + 1 (0x1021)
@@ -11,6 +15,10 @@
  *
  */
 uint16_t crc_xmodem_update (uint16_t crc, uint8_t _data);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 
