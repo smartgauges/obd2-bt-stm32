@@ -252,7 +252,7 @@ void can_autoselect_speed(void)
  * 38400 kbit/sec = 3840 kbytes/sec
  */
 
-static uint32_t can_cnt = 0;
+static uint32_t can_cycle = 0;
 void can_process(void)
 {
 	uint8_t msgs_num = can_get_msgs_num();
@@ -260,8 +260,8 @@ void can_process(void)
 	if (!msgs_num)
 		return;
 
-	can_cnt++;
-	uint8_t odd_mask = (can_cnt & 1) ? e_can_odd : 0;
+	can_cycle++;
+	uint8_t odd_mask = (can_cycle & 1) ? e_can_odd : 0;
 
 	for (uint8_t i = 0; i < msgs_num; i++) {
 
@@ -299,7 +299,7 @@ void snd_status(void)
 	st->version = 3;
 	st->speed = speed;
 	st->num_ids = 0;
-	st->num_bytes = can_cnt;
+	st->num_bytes = can_cycle;
 	hdlc_put_msg(msg);
 }
 
