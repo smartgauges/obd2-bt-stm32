@@ -17,6 +17,12 @@ enum e_type
 
 };
 
+struct qid_t
+{
+	uint32_t id;
+	QString name;
+};
+
 class channel_t : public QWidget
 {
 	Q_OBJECT
@@ -32,10 +38,10 @@ class channel_t : public QWidget
 	public:
 		channel_t(uint32_t idx, QWidget *parent = 0);
 		~channel_t();
-		void set_ids(QVector <uint32_t>);
+		void set_ids(QVector <qid_t>);
 
 	signals:
-		void sig_enabled(int idx, uint32_t id, int type, int off, double mul, int add);
+		void sig_enabled(int idx, uint32_t id, int type, int off, uint16_t mask, double mul, double add);
 		void sig_disabled(int idx);
 };
 
