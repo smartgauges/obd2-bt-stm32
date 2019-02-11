@@ -198,6 +198,10 @@ void start_boot(void)
 		;
 }
 
+#define CAN_FILTER_ID_NUMS 4
+uint32_t can_filter_id_cnt = 0;
+uint32_t can_filter_id[CAN_FILTER_ID_NUMS];
+
 void usart_process(void)
 {
 	uint8_t ch;
@@ -227,6 +231,36 @@ void usart_process(void)
 
 		hdlc_put_msg(msg);
 		start_boot();
+	}
+	else if ((msg->type == e_type_cmd) && (msg->len >= (sizeof(struct msg_t) + 1))) {
+
+		uint8_t * cmd = (uint8_t *)msg->data;
+		//unset filter
+		if (cmd[0] == e_cmd_unset_filter) {
+
+			can_filter_id_cnt = 0;
+		}
+		//set filter
+		else if ((cmd[0] == e_cmd_set_filter) && (msg->len == (sizeof(struct msg_t) + 5))) {
+
+			if (can_filter_id_cnt < CAN_FILTER_ID_NUMS) {
+
+				uint32_t id = 0;
+				//align bug?
+				memcpy(&id, (msg->data + 1), 4);
+
+				uint8_t found = 0;
+				for (uint8_t i = 0; i < can_filter_id_cnt; i++)
+					if (id == can_filter_id[i])
+						found = 1;
+
+				if (!found) {
+
+					can_filter_id[can_filter_id_cnt] = id;
+					can_filter_id_cnt++;
+				}
+			}
+		}
 	}
 	else {
 
@@ -269,6 +303,18 @@ void can_process(void)
 		struct msg_can_t msg;
 
 		if (can_get_msg(&msg, i)) {
+
+			uint8_t id_in_filter = 0;
+			if (can_filter_id_cnt) {
+				for (uint8_t j = 0; j < can_filter_id_cnt; j++) {
+
+					if (can_filter_id[j] == msg.id)
+						id_in_filter = 1;
+				}
+			}
+
+			if (can_filter_id_cnt && !id_in_filter)
+				continue;
 
 			led_yellow_on();
 
@@ -339,6 +385,9 @@ int main(void)
 			if (timer.flag_40ms) {
 
 				timer.flag_40ms = 0;
+
+				if (can_filter_id_cnt)
+					can_process();
 				can_autoselect_speed();
 			}
 
