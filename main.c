@@ -283,6 +283,21 @@ void can_process(void)
 	}
 }
 
+void snd_status(void)
+{
+	uint8_t buf[sizeof(struct msg_t) + sizeof(struct msg_status_t)];
+	struct msg_t * msg = (struct msg_t *)buf;
+	msg->len = sizeof(buf);
+	msg->type = e_type_status;
+	msg_status_t * st = (msg_status_t *)msg->data;
+	st->mode = e_mode_sniffer;
+	st->version = 3;
+	st->speed = speed;
+	st->num_ids = 0;
+	st->num_bytes = can_cnt;
+	hdlc_put_msg(msg);
+}
+
 int main(void)
 {
 	// Copy interrupt vector table to the RAM.
@@ -320,24 +335,12 @@ int main(void)
 
 				led_red_on();
 
-				//send status
-				uint8_t buf[sizeof(struct msg_t) + sizeof(struct msg_status_t)];
-				struct msg_t * msg = (struct msg_t *)buf;
-				msg->len = sizeof(buf);
-				msg->type = e_type_status;
-				msg_status_t * st = (msg_status_t *)msg->data;
-				st->mode = e_mode_sniffer;
-				st->version = 1;
-				st->speed = speed;
-				st->num_ids = 0;
-				st->num_bytes = can_cnt;
-				hdlc_put_msg(msg);
+				snd_status();
 
 				can_process();
 				can_autoselect_speed();
 				timer.flag_1000ms = 0;
 			}
-
 		}
 	}
 
