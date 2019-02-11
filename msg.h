@@ -69,6 +69,12 @@ typedef struct msg_debug_t
 	uint8_t data[0];
 } __attribute__ ((__packed__)) msg_debug_t;
 
+enum e_cmd_types
+{
+	e_cmd_unset_filter = 0,
+	e_cmd_set_filter
+};
+
 enum e_msg_types
 {
 	e_type_ping = 0,
