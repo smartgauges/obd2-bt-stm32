@@ -68,9 +68,10 @@ static void gpio_setup(void)
 typedef struct
 {
 	volatile uint16_t flag_tick;
+	volatile uint16_t flag_40ms;
 	volatile uint16_t flag_1000ms;
 } tick_t;
-volatile tick_t timer = { 0, 0 };
+volatile tick_t timer = { 0, 0, 0 };
 
 static void systick_setup(void)
 {
@@ -87,11 +88,18 @@ static void systick_setup(void)
 	systick_counter_enable();
 }
 
+static uint16_t div_40ms = 0;
 static uint16_t div_1000ms = 0;
 
 void sys_tick_handler(void)
 {
 	timer.flag_tick = 1;
+
+	if (++div_40ms >= MSEC_TO_TICK(40)) {
+
+		div_40ms = 0;
+		timer.flag_40ms = 1;
+	}
 
 	if (++div_1000ms >= SEC_TO_TICK(1)) {
 
@@ -228,12 +236,10 @@ void usart_process(void)
 	}
 }
 
-static uint32_t can_cnt = 0;
 e_speed_t speed = e_speed_125;
-
 void can_autoselect_speed(void)
 {
-	if (can_cnt)
+	if (can_get_msgs_num())
 		return;
 
 	if (++speed > e_speed_1000)
@@ -243,11 +249,10 @@ void can_autoselect_speed(void)
 }
 
 /*
- * 14 07 00 00 00 00 28 01 00 00 01 04 ff ff ff ff ff 80 00 00
- * 22 * 60 = 1320 bytes
  * 38400 kbit/sec = 3840 kbytes/sec
- *
  */
+
+static uint32_t can_cnt = 0;
 void can_process(void)
 {
 	uint8_t msgs_num = can_get_msgs_num();
@@ -331,6 +336,12 @@ int main(void)
 
 			timer.flag_tick = 0;
 
+			if (timer.flag_40ms) {
+
+				timer.flag_40ms = 0;
+				can_autoselect_speed();
+			}
+
 			if (timer.flag_1000ms) {
 
 				led_red_on();
@@ -338,7 +349,6 @@ int main(void)
 				snd_status();
 
 				can_process();
-				can_autoselect_speed();
 				timer.flag_1000ms = 0;
 			}
 		}
