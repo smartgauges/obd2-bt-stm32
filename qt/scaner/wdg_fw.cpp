@@ -137,7 +137,11 @@ void wdg_fw_t::slt_timer()
 #define MAX_FW_SIZE (28 * 1024)
 void wdg_fw_t::slt_open()
 {
-	QString filename = QFileDialog::getOpenFileName(this, tr("Open F3S Firmware"), QString(), tr("Binary Files (*.bin)"));
+#ifdef Q_OS_ANDROID
+	QString filename = QFileDialog::getOpenFileName(this, tr("Open firmware file"), "/sdcard/Download/", tr("Binary Files (*.bin)"));
+#else
+	QString filename = QFileDialog::getOpenFileName(this, tr("Open firmware file"), "./", tr("Binary Files (*.bin)"));
+#endif
 
 	QFile file(filename);
 	if (!file.open(QIODevice::ReadOnly)) {

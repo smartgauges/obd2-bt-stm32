@@ -342,8 +342,7 @@ void wdg_bt_t::slt_socket_read()
 
 	qint64 nbytes = socket->bytesAvailable();
 
-//	log.sprintf("in available %lld bytes", nbytes);
-//	emit sig_log(e_log_debug, log);
+	//emit sig_log(e_log_debug, QString().sprintf("in available %lld bytes", nbytes));
 
 	if (nbytes <= 0)
 		return;

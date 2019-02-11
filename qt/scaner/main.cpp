@@ -56,9 +56,14 @@ main_t::main_t(QMainWindow * parent) : QMainWindow(parent), ui(new Ui::can)
 	ui->view->setRootIsDecorated(false);
 	//ui->view->setColumnWidth(0, 40);
 
+	ui->view->setSelectionBehavior(QAbstractItemView::SelectRows);
+	ui->view->setSelectionMode(QAbstractItemView::MultiSelection);
+
 	connect(ui->btn_start, &QToolButton::clicked, this, &main_t::slt_btn_start);
 	connect(ui->btn_save, &QToolButton::clicked, this, &main_t::slt_btn_save);
 	connect(ui->btn_open, &QToolButton::clicked, this, &main_t::slt_btn_open);
+	connect(ui->btn_filter, &QToolButton::clicked, this, &main_t::slt_btn_filter);
+	connect(ui->btn_bttest, &QToolButton::clicked, this, &main_t::slt_btn_bttest);
 
 	timer.setSingleShot(false);
 	timer.start(1000 / TICK_HZ);
@@ -96,6 +101,11 @@ main_t::main_t(QMainWindow * parent) : QMainWindow(parent), ui(new Ui::can)
 #else
 	slt_btn_bt();
 #endif
+
+	bttest_min = 0;
+	bttest_max = 0;
+	bttest_avr = 0;
+	bttest_cnt = 0;
 }
 
 main_t::~main_t()
@@ -312,6 +322,63 @@ void main_t::slt_btn_save()
 	file.close();
 }
 
+void main_t::slt_btn_bttest()
+{
+	if (ui->btn_bttest->isChecked()) {
+
+		bttest_min = 0;
+		bttest_max = 0;
+		bttest_avr = 0;
+		bttest_cnt = 0;
+
+		QByteArray ba(sizeof(msg_t), 0);
+		struct msg_t * m = (struct msg_t *)ba.data();
+		m->len = ba.size();
+		m->type = e_type_ping;
+
+		etimer.start();
+		emit sig_msg(ba);
+	}
+}
+
+void main_t::slt_btn_filter()
+{
+	if (ui->btn_filter->isChecked()) {
+
+		QModelIndexList l = ui->view->selectionModel()->selectedRows(ListModel::e_col_id);
+
+		QByteArray ba(sizeof(msg_t) + 5, 0);
+		struct msg_t * m = (struct msg_t *)ba.data();
+		m->len = ba.size();
+		m->type = e_type_cmd;
+
+		for (int i = 0; i < l.size(); i++) {
+
+			uint8_t * cmd = m->data;
+			cmd[0] = 1;
+
+			//qDebug() << list.get_id(l[i].row());
+
+			uint32_t * id = (uint32_t *)(m->data + 1);
+			*id = list.get_id(l[i].row());
+
+			emit sig_msg(ba);
+		}
+	}
+	else {
+		ui->view->selectionModel()->clearSelection();
+
+		QByteArray ba(sizeof(msg_t) + 1, 0);
+		struct msg_t * m = (struct msg_t *)ba.data();
+		m->len = ba.size();
+		m->type = e_type_cmd;
+		uint8_t * cmd = m->data;
+		cmd[0] = 0;
+
+		emit sig_msg(ba);
+	}
+}
+
 void main_t::slt_btn_open()
 { 
 	QString fileName;
@@ -385,9 +452,7 @@ void main_t::slt_opened()
 	rx_cnt = 0;
 	err_cnt = 0;
 	rx_msgs.clear();
-	ui->cb_rx_id->clear();
 	rx_id2idx.clear();
-	ui->cb_rx_id->addItem("All");
 	ui->lbl_state->setText("Opened");
 
 	flag_started = true;
@@ -588,10 +653,35 @@ void main_t::slt_msg(const QByteArray & ba)
 
 		return;
 	}
-
-	if (m->type == e_type_erase) {
+	else if (m->type == e_type_erase) {
 
 		slt_log(0, "flash erased");
+		return;
+	}
+	else if (m->type == e_type_pong) {
+
+		uint32_t ms = etimer.elapsed();
+		if (!bttest_min || bttest_min > ms)
+			bttest_min = ms;
+		if (bttest_max < ms)
+			bttest_max = ms;
+		bttest_avr += ms;
+		bttest_avr /= 2;
+		bttest_cnt++;
+
+		ui->label_bttest->setText(QString("%1 %2 %3 %4").arg(bttest_cnt).arg(bttest_min).arg(bttest_avr).arg(bttest_max));
+
+		if (ui->btn_bttest->isChecked()) {
+
+			QByteArray ba(sizeof(msg_t), 0);
+			struct msg_t * m = (struct msg_t *)ba.data();
+			m->len = ba.size();
+			m->type = e_type_ping;
+
+			etimer.start();
+			emit sig_msg(ba);
+		}
+
 		return;
 	}
 
@@ -653,12 +743,38 @@ void main_t::slt_msg(const QByteArray & ba)
 		info.ticks = 0;
 
 		rx_id2idx[msg->id] = info;
-		ui->cb_rx_id->addItem(QString("%1").arg(msg->id, 0, 16));
 	}
 	else {
 		info_t & info = iter.value();
 		info.set(msg->data);
 		info.num = msg->num;
+	}
+
+	//solaris
+	/* 0x440 - x   x    speed   x    x x x x - speed */
+	if (msg->id == 0x440) {
+
+		ui->tab_rpm->setSpeed(msg->data[2]);
+	}
+	else if (msg->id == 0x316) {
+
+		uint16_t t = msg->data[2] | msg->data[3] << 8;
+		ui->tab_rpm->setTaho(t/4);
+	}
+
+	//lr2
+	//0x150 - x    x     x      x    x    x  speed   x - (speed * 2.5)
+	if (msg->id == 0x150) {
+
+		int v = (((uint16_t)msg->data[6]) << 8 | msg->data[7]) & 0xffff;
+		v /= 100;
+		ui->tab_rpm->setSpeed(v);
+		//qDebug() << "speed:" << v;
+	}
+	else if (msg->id == 0x12a) {
+
+		int v = (((uint16_t)msg->data[6]) << 8 | msg->data[7]) & 0xfff;
+		ui->tab_rpm->setTaho(v);
 	}
 
 	msg_sync++;

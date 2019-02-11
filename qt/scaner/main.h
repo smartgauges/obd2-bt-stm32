@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QMap>
 #include <QTimer>
+#include <QElapsedTimer>
 
 #include "list.h"
 
@@ -33,6 +34,8 @@ class main_t : public QMainWindow
 
 		bool flag_started;
 		QTimer timer;
+		uint32_t bttest_min, bttest_max, bttest_avr, bttest_cnt;
+		QElapsedTimer etimer;
 
 		ListModel list;
 
@@ -47,6 +50,8 @@ class main_t : public QMainWindow
 		void slt_btn_start();
 		void slt_btn_open();
 		void slt_btn_save();
+		void slt_btn_filter();
+		void slt_btn_bttest();
 		void slt_timer();
 		void slt_cb_tx(int idx);
 		void slt_cb_select_tx_id(int idx);

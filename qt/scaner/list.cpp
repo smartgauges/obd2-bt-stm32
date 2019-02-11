@@ -128,6 +128,15 @@ bool ListModel::set_state(const QVector <info_t> & _ids)
 	return false;
 }
 
+uint32_t ListModel::get_id(int idx)
+{
+	if (idx > ids.size())
+		return 0xffffffff;
+
+	return ids[idx].id;
+}
+
+
 void ListModel::reset()
 {
 	beginResetModel();

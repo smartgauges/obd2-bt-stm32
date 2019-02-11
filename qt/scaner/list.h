@@ -106,6 +106,7 @@ class ListModel : public QAbstractListModel
 
 		void reset();
 		bool set_state(const QVector <info_t> &);
+		uint32_t get_id(int idx);
 };
 
 #endif

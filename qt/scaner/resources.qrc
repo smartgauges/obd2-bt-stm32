@@ -1,5 +1,7 @@
 <RCC>
   <qresource prefix="/">
+    <file>images/bttest.png</file>
+    <file>images/filter.png</file>
     <file>images/fw.png</file>
     <file>images/menu.png</file>
     <file>images/usb.png</file>
@@ -15,5 +17,12 @@
     <file>images/save.png</file>
     <file>images/reset.png</file>
     <file>images/erase.png</file>
+    <file>images/tachometer.png</file>
+    <file>images/venator/speed.png</file>
+    <file>images/venator/taho.png</file>
+    <file>images/venator/arrow0.png</file>
+    <file>images/venator/circle1.png</file>
+    <file>images/venator/red.png</file>
+    <file>images/venator/green.png</file>
   </qresource>
 </RCC>
