@@ -13,12 +13,20 @@ qmsg_can_t::qmsg_can_t()
 	num = 0;
 	type = 0;
 	len = 0;
+	t = 0;
 	memset(data, 0, sizeof(data));
 }
 
 main_t::main_t(QMainWindow * parent) : QMainWindow(parent), ui(new Ui::plot)
 {
 	ui->setupUi(this);
+
+	ui->cb_step->addItem("1000");
+	ui->cb_step->addItem("500");
+	ui->cb_step->addItem("250");
+	ui->cb_step->addItem("100");
+	connect(ui->cb_step, SIGNAL(activated(int)), this, SLOT(slt_step_activated()));
+	connect(ui->rb_opengl, &QRadioButton::toggled, this, &main_t::slt_btn_opengl);
 
 	for (int i = 0; i < NUM_CHANNELS; i++) {
 
@@ -40,6 +48,8 @@ void main_t::open_file(const QString & fileName)
 {
 	if (fileName.isEmpty())
 		return;
+
+	setWindowTitle(fileName);
 
 	QFileInfo fi(fileName);
 	if (fi.suffix() == "csv")
@@ -193,19 +203,39 @@ void main_t::open_file_csv(const QString & fileName)
 	ui->graph->prepare(time_idx);
 }
 
+void main_t::slt_step_activated()
+{
+	QString f = windowTitle();
+	if (!f.isEmpty()) {
+
+		QFileInfo fi(f);
+		if (fi.suffix() == "log")
+			open_file(f);
+	}
+}
+
+void main_t::slt_btn_opengl(bool en)
+{
+	ui->graph->set_opengl(en);
+}
+
 void main_t::open_file_log(const QString & fileName)
 {
 	QFile file(fileName);
 	if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
 		return;
 
-	ui->graph->clear();
+	bool ok;
+	int step = ui->cb_step->currentText().toInt(&ok, 10);
+	if (step < 100 || step > 1000)
+		step = 1000;
 
-	int time_idx = 0;
+	ui->graph->clear();
 
 	msgs.clear();
 
-	time_t cur_sec = 0;
+	int start_sec = -1;
+	int max_sec = 0;
 	while (!file.atEnd()) {
 
 		QString line = file.readLine();
@@ -233,19 +263,15 @@ void main_t::open_file_log(const QString & fileName)
 
 		bool ok;
 		time_t sec = tlist[0].toInt(&ok, 10);
-		//uint32_t usec = tlist[1].toInt(&ok, 10);
+		uint32_t msec = tlist[1].toInt(&ok, 10)/1000;
 
-		if (cur_sec != sec) {
-
-			time_idx++;
-			cur_sec = sec;
-		}
+		if (-1 == start_sec)
+			start_sec = sec;
+		sec = sec - start_sec;
 
 		QStringList flist = list[2].split('#');
 		if (flist.size() != 2)
 			continue;
-
-		//int r = parse_canframe(ascframe, &msg);
 
 		QString data = flist[1];
 		data.remove('\n');
@@ -280,25 +306,46 @@ void main_t::open_file_log(const QString & fileName)
 				msg_idx = i;
 		}
 
+		//qDebug() << "msg_idx:" << msg_idx;
+
 		//new id
 		if (msg_idx == -1) {
 
-			//qDebug() << "msg_idx:" << msg_idx << "time_idx:" << time_idx << "id:" << msg.id;
-			//qDebug() << list;
-
 			msgs.resize(msgs.size() + 1);
 			msg_idx = msgs.size() - 1;
-			msgs[msg_idx].resize(time_idx + 1);
-			msgs[msg_idx][0].id = msg.id;
-			msgs[msg_idx][0].dev = msg.dev;
+		}
+		QVector < qmsg_can_t > & vec = msgs[msg_idx];
+		time_t prev_sec = sec;
+		uint32_t prev_msec = msec;
+		uint32_t t_idx = vec.size();
+		//qDebug() << "t_idx:" << t_idx;
+
+		if (t_idx) {
+
+			double prev_t = vec[t_idx - 1].t;
+			prev_sec = prev_t;
+			prev_msec = (prev_t - prev_sec) * 1000;
 		}
 
-		QVector < qmsg_can_t > & vec = msgs[msg_idx];
-		msgs[msg_idx].resize(time_idx + 1);
-		vec[time_idx] = msg;
+		int32_t delta = (sec - prev_sec) * 1000;
+		delta += msec - prev_msec;
+
+		if (delta >= step || !t_idx) {
+
+			prev_sec = sec;
+			prev_msec = msec;
+
+			msg.t = sec + ((double)msec)/1000.0;
+
+			//qDebug() << t << msg.t;
+
+			vec.push_back(msg);
+		}
+
+		max_sec = sec;
 	}
 
-	set_status(QString("file %1 open, %2 ids msgs loaded, %3 times").arg(fileName).arg(msgs.size()).arg(time_idx));
+	set_status(QString("file %1 open, %2 ids msgs loaded, step %3ms").arg(fileName).arg(msgs.size()).arg(step));
 
 	file.close();
 
@@ -313,10 +360,19 @@ void main_t::open_file_log(const QString & fileName)
 		channels[i]->set_ids(ids);
 	}
 
-	ui->graph->prepare(time_idx);
+	ui->graph->prepare(max_sec);
 }
 
-void main_t::slt_channel_enabled(int idx, uint32_t id, int type, int off, uint16_t mask, double mul, double add)
+uint8_t reverse(uint8_t b)
+{
+	b = (b & 0xF0) >> 4 | (b & 0x0F) << 4;
+	b = (b & 0xCC) >> 2 | (b & 0x33) << 2;
+	b = (b & 0xAA) >> 1 | (b & 0x55) << 1;
+
+	return b;
+}
+
+void main_t::slt_channel_enabled(int idx, uint32_t id, int type, int off, uint16_t mask, double mul, double add, bool swap)
 { 
 	for (int i = 0; i < msgs.size(); i++) {
 
@@ -324,21 +380,27 @@ void main_t::slt_channel_enabled(int idx, uint32_t id, int type, int off, uint16
 
 			QVector < qmsg_can_t > & vec = msgs[i];
 
-			QVector <double> data(vec.size());
+			QVector <data_t> data(vec.size());
 
 			for (int j = 0; j < vec.size(); j++) {
 
+				data[j].t = vec[j].t;
+
 				if (type == e_type_byte) {
-					data[j] = (vec[j].data[off] & mask) * mul + add;
+
+					uint8_t b = vec[j].data[off];
+					if (swap)
+						b = reverse(b);
+					data[j].value = (b & mask) * mul + add;
 				}
 				else if (type == e_type_word_le) {
-					data[j] = ((vec[j].data[off] + ((off < 7) ? 256 * vec[j].data[off + 1] : 0)) & mask) * mul + add;
+					data[j].value = ((vec[j].data[off] + ((off < 7) ? 256 * vec[j].data[off + 1] : 0)) & mask) * mul + add;
 				}
 				else if (type == e_type_word_be) {
-					data[j] = ((vec[j].data[off] * 256 + ((off < 7) ? vec[j].data[off + 1] : 0)) & mask) * mul + add;
+					data[j].value = ((vec[j].data[off] * 256 + ((off < 7) ? vec[j].data[off + 1] : 0)) & mask) * mul + add;
 				}
 				else
-					data[0] = 0;
+					data[0].value = 0;
 			}
 
 			ui->graph->set(idx, data);

@@ -30,9 +30,10 @@ graph_t::graph_t(QWidget *parent) : QWidget(parent)
 
 		diagram[i].setName(QString("Channel %1").arg(i + 1));
 		diagram[i].setPen(pen[i]);
-#ifndef Q_OS_WIN32
-		diagram[i].setUseOpenGL(true);
-#endif
+		//diagram[i].setPointLabelsVisible(true);
+		//diagram[i].setPointLabelsFormat("(@xPoint, @yPoint)");
+		diagram[i].setPointsVisible(true);
+		diagram[i].setUseOpenGL(false);
 		view->chart()->addSeries(&diagram[i]);
 		view->chart()->setAxisX(xAxis, &diagram[i]);
 		view->chart()->setAxisY(yAxis, &diagram[i]);
@@ -51,14 +52,15 @@ void graph_t::prepare(int x)
 	yAxis->setRange(-10, 300);
 }
 
-void graph_t::set(int idx, QVector<double> & data)
+void graph_t::set(int idx, QVector<data_t> & data)
 {
 	if (idx > NUM_CHANNELS)
 		return;
 
 	diagram[idx].clear();
 
-	paint(data, &diagram[idx]);
+	for(int i(0); i < data.size(); i++)
+		diagram[idx].append(data[i].t, data[i].value);
 }
 
 void graph_t::clear(int idx)
@@ -75,9 +77,9 @@ void graph_t::clear()
 		diagram[i].clear();
 }
 
-void graph_t::paint(QVector <double> & data, QLineSeries *series)
+void graph_t::set_opengl(bool en)
 {
-	for(int i(0); i < data.size(); i++)
-		series->append(i, data[i]);
+	for (int i = 0; i < NUM_CHANNELS; i++)
+		diagram[i].setUseOpenGL(en);
 }
 

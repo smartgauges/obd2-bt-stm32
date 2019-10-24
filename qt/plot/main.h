@@ -16,6 +16,7 @@ namespace Ui
 struct qmsg_can_t : public msg_can_t
 {
 	QString dev;
+	double t;
 	qmsg_can_t();
 };		   
 
@@ -34,8 +35,10 @@ class main_t : public QMainWindow
 
 	private slots:
 		void slt_btn_open();
-		void slt_channel_enabled(int idx, uint32_t id, int type, int off, uint16_t mask, double mul, double add);
+		void slt_channel_enabled(int idx, uint32_t id, int type, int off, uint16_t mask, double mul, double add, bool swap);
 		void slt_channel_disabled(int idx);
+		void slt_step_activated();
+		void slt_btn_opengl(bool);
 
 	public:
 		main_t(QMainWindow *parent = 0);

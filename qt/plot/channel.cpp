@@ -29,6 +29,7 @@ channel_t::channel_t(uint32_t i, QWidget *parent) : QWidget(parent), idx(i), ui(
 	connect(ui->sbox_mul, SIGNAL(valueChanged(double)), this, SLOT(slt_activated()));
 	connect(ui->sbox_add, SIGNAL(valueChanged(double)), this, SLOT(slt_activated()));
 	connect(ui->le_mask, SIGNAL(textChanged(const QString &)), this, SLOT(slt_activated()));
+	connect(ui->btn_swap, &QRadioButton::toggled, this, &channel_t::slt_btn_swap);
 }
 
 channel_t::~channel_t()
@@ -55,14 +56,21 @@ void channel_t::slt_btn_en(bool en)
 		double add = ui->sbox_add->value();
 		bool ok;
 		uint16_t mask = ui->le_mask->displayText().toInt(&ok, 16);
+		bool swap = ui->btn_swap->isChecked();
 
-		emit sig_enabled(idx, id, type, off, mask, mul, add);
+		emit sig_enabled(idx, id, type, off, mask, mul, add, swap);
 	}
 	else
 		emit sig_disabled(idx);
 }
 
 void channel_t::slt_activated()
+{
+	if (ui->btn_en->isChecked())
+		slt_btn_en(true);
+}
+
+void channel_t::slt_btn_swap(bool)
 {
 	if (ui->btn_en->isChecked())
 		slt_btn_en(true);

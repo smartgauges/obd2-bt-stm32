@@ -34,6 +34,7 @@ class channel_t : public QWidget
 	private slots:
 		void slt_btn_en(bool en);
 		void slt_activated();
+		void slt_btn_swap(bool en);
 
 	public:
 		channel_t(uint32_t idx, QWidget *parent = 0);
@@ -41,7 +42,7 @@ class channel_t : public QWidget
 		void set_ids(QVector <qid_t>);
 
 	signals:
-		void sig_enabled(int idx, uint32_t id, int type, int off, uint16_t mask, double mul, double add);
+		void sig_enabled(int idx, uint32_t id, int type, int off, uint16_t mask, double mul, double add, bool swap);
 		void sig_disabled(int idx);
 };
 

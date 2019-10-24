@@ -11,6 +11,12 @@
 using namespace QtCharts;
 
 #define NUM_CHANNELS 5
+typedef struct data_t
+{
+	double value;
+	double t;
+} data_t;
+
 class graph_t : public QWidget
 {
 	Q_OBJECT
@@ -26,15 +32,14 @@ class graph_t : public QWidget
 		QPen pen[NUM_CHANNELS];
 		QLineSeries diagram[NUM_CHANNELS];
 
-		void paint(QVector <double> & data, QLineSeries *series);
-
 	public:
 		graph_t(QWidget *parent = 0);
 		~graph_t();
 
-		void set(int idx, QVector<double> & data);
+		void set(int idx, QVector<data_t> & data);
 		void clear(int idx);
 		void clear();
+		void set_opengl(bool en);
 
 		void prepare(int x);
 };
