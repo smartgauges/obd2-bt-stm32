@@ -7,3 +7,4 @@ Firmware for the cheapest can sniffer
 ![OBD2 pcb](images/2.jpg)
 ![OBD2 scheme](images/3.jpg)
 ![OBD2 pins](images/4.jpg)
+![plot](images/plot.png)
