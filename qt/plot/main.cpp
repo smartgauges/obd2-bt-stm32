@@ -173,18 +173,18 @@ void main_t::open_file_csv(const QString & fileName)
 		//new id
 		if (msg_idx == -1) {
 
-			//qDebug() << "msg_idx:" << msg_idx << "time_idx:" << time_idx << "id:" << msg.id;
-			//qDebug() << list;
-
 			msgs.resize(msgs.size() + 1);
 			msg_idx = msgs.size() - 1;
 			msgs[msg_idx].resize(time_idx + 1);
 			msgs[msg_idx][0].id = msg.id;
+
+			//qDebug() << "msg_idx:" << msg_idx << "time_idx:" << time_idx << "id:" << msg.id;
+			//qDebug() << list;
 		}
 
 		QVector < qmsg_can_t > & vec = msgs[msg_idx];
-		msgs[msg_idx].resize(time_idx + 1);
-		vec[time_idx] = msg;
+		msg.t = time_idx;
+		vec.push_back(msg);
 	}
 
 	set_status(QString("file %1 open, %2 ids msgs loaded, %3 times").arg(fileName).arg(msgs.size()).arg(time_idx));
