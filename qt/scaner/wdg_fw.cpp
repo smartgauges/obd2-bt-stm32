@@ -24,6 +24,14 @@ wdg_fw_t::wdg_fw_t(QWidget * parent) : QWidget(parent), ui(new Ui::fw)
 
 	timer.setSingleShot(true);
 	connect(&timer, SIGNAL(timeout()),this, SLOT(slt_timer()));
+
+	ui->cb_speed->addItem("125");
+	ui->cb_speed->addItem("250");
+	ui->cb_speed->addItem("500");
+	ui->cb_speed->addItem("1000");
+	ui->cb_speed->addItem("auto");
+
+	connect(ui->cb_speed, SIGNAL(currentIndexChanged(int)), this, SLOT(slt_cb_select_speed(int)));
 }
 
 bool wdg_fw_t::send()
@@ -163,5 +171,19 @@ void wdg_fw_t::slt_open()
 	}
 
 	qDebug() << "file size:" << len << "fw size:" << fw.size();
+}
+
+void wdg_fw_t::slt_cb_select_speed(int idx)
+{
+	QByteArray ba(sizeof(msg_t) + 2, 0);
+	struct msg_t * m = (struct msg_t *)ba.data();
+	m->len = ba.size();
+	m->type = e_type_cmd;
+
+	uint8_t * cmd = m->data;
+	cmd[0] = e_cmd_set_speed;
+	cmd[1] = idx;
+
+	emit sig_msg(ba);
 }
 

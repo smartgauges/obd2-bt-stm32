@@ -125,6 +125,16 @@
           </property>
          </spacer>
         </item>
+        <item>
+         <widget class="QComboBox" name="cb_speed">
+          <property name="minimumSize">
+           <size>
+            <width>96</width>
+            <height>48</height>
+           </size>
+          </property>
+         </widget>
+        </item>
        </layout>
       </item>
       <item>

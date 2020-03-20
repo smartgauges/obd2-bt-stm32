@@ -33,6 +33,7 @@ class wdg_fw_t : public QWidget
 		void slt_timer();
 		void slt_rst();
 		void slt_erase();
+		void slt_cb_select_speed(int idx);
 
 	signals:
 		void sig_msg(const QByteArray & ba);

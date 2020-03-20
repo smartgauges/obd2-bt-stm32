@@ -101,6 +101,7 @@ main_t::main_t(QMainWindow * parent) : QMainWindow(parent), ui(new Ui::can)
 #else
 	slt_btn_bt();
 #endif
+	//ui->stack->setCurrentIndex(e_info);
 
 	bttest_min = 0;
 	bttest_max = 0;
@@ -355,7 +356,7 @@ void main_t::slt_btn_filter()
 		for (int i = 0; i < l.size(); i++) {
 
 			uint8_t * cmd = m->data;
-			cmd[0] = 1;
+			cmd[0] = e_cmd_set_filter;
 
 			//qDebug() << list.get_id(l[i].row());
 
@@ -373,7 +374,7 @@ void main_t::slt_btn_filter()
 		m->len = ba.size();
 		m->type = e_type_cmd;
 		uint8_t * cmd = m->data;
-		cmd[0] = 0;
+		cmd[0] = e_cmd_unset_filter;
 
 		emit sig_msg(ba);
 	}

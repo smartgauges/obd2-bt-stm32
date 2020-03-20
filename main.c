@@ -202,6 +202,9 @@ void start_boot(void)
 uint32_t can_filter_id_cnt = 0;
 uint32_t can_filter_id[CAN_FILTER_ID_NUMS];
 
+e_speed_t speed = e_speed_125;
+uint8_t autoselect_speed = 1;
+
 void usart_process(void)
 {
 	uint8_t ch;
@@ -261,6 +264,18 @@ void usart_process(void)
 				}
 			}
 		}
+		//set speed
+		else if ((cmd[0] == e_cmd_set_speed) && (msg->len == (sizeof(struct msg_t) + 2))) {
+
+			autoselect_speed = 0;
+
+			speed = cmd[1];
+			if (speed > e_speed_1000) {
+
+				speed = e_speed_125;
+				autoselect_speed = 1;
+			}
+		}
 	}
 	else {
 
@@ -270,9 +285,11 @@ void usart_process(void)
 	}
 }
 
-e_speed_t speed = e_speed_125;
 void can_autoselect_speed(void)
 {
+	if (!autoselect_speed)
+		return;
+
 	if (can_get_msgs_num())
 		return;
 
@@ -342,7 +359,7 @@ void snd_status(void)
 	msg->type = e_type_status;
 	msg_status_t * st = (msg_status_t *)msg->data;
 	st->mode = e_mode_sniffer;
-	st->version = 3;
+	st->version = 4;
 	st->speed = speed;
 	st->num_ids = 0;
 	st->num_bytes = can_cycle;
