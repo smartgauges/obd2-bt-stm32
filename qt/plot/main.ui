@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>509</width>
-    <height>353</height>
+    <width>1078</width>
+    <height>915</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -47,10 +47,39 @@
           <property name="text">
            <string>OpenGL</string>
           </property>
+          <property name="autoExclusive">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="rb_group">
+          <property name="text">
+           <string>Group</string>
+          </property>
+          <property name="autoExclusive">
+           <bool>false</bool>
+          </property>
          </widget>
         </item>
         <item>
          <widget class="QComboBox" name="cb_step"/>
+        </item>
+        <item>
+         <spacer name="verticalSpacer">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Preferred</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
         </item>
        </layout>
       </item>
@@ -70,7 +99,14 @@
      </layout>
     </item>
     <item>
-     <widget class="graph_t" name="graph" native="true"/>
+     <widget class="graph_t" name="graph" native="true">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>

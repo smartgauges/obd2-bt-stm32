@@ -6,93 +6,30 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>210</width>
-    <height>270</height>
+    <width>177</width>
+    <height>269</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="6" column="1">
-    <widget class="QComboBox" name="combo_type"/>
-   </item>
-   <item row="7" column="0">
-    <widget class="QLabel" name="label_3">
-     <property name="text">
-      <string>Offset</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="1">
-    <widget class="QRadioButton" name="btn_en">
-     <property name="text">
-      <string>Enable</string>
-     </property>
-     <property name="autoExclusive">
-      <bool>false</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="0">
-    <widget class="QLabel" name="lbl_name">
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="9" column="0">
-    <widget class="QLabel" name="label_4">
-     <property name="text">
-      <string>Mul</string>
-     </property>
-    </widget>
-   </item>
-   <item row="9" column="1">
-    <widget class="QDoubleSpinBox" name="sbox_mul">
-     <property name="decimals">
-      <number>3</number>
-     </property>
-     <property name="value">
-      <double>1.000000000000000</double>
-     </property>
-    </widget>
-   </item>
-   <item row="6" column="0">
-    <widget class="QLabel" name="label_2">
-     <property name="text">
-      <string>Type</string>
-     </property>
-    </widget>
-   </item>
-   <item row="7" column="1">
-    <widget class="QComboBox" name="combo_offset"/>
-   </item>
-   <item row="10" column="0">
-    <widget class="QLabel" name="label_6">
-     <property name="text">
-      <string>Add</string>
-     </property>
-    </widget>
-   </item>
-   <item row="8" column="0">
-    <widget class="QLabel" name="label_5">
-     <property name="text">
-      <string>Mask</string>
-     </property>
-    </widget>
-   </item>
-   <item row="8" column="1">
-    <widget class="QLineEdit" name="le_mask">
-     <property name="text">
-      <string>ffff</string>
-     </property>
-     <property name="maxLength">
-      <number>4</number>
-     </property>
-    </widget>
-   </item>
-   <item row="10" column="1">
+   <property name="leftMargin">
+    <number>5</number>
+   </property>
+   <property name="topMargin">
+    <number>5</number>
+   </property>
+   <property name="rightMargin">
+    <number>5</number>
+   </property>
+   <property name="bottomMargin">
+    <number>5</number>
+   </property>
+   <property name="spacing">
+    <number>3</number>
+   </property>
+   <item row="10" column="2">
     <widget class="QDoubleSpinBox" name="sbox_add">
      <property name="decimals">
       <number>1</number>
@@ -105,21 +42,99 @@
      </property>
     </widget>
    </item>
-   <item row="4" column="1">
+   <item row="1" column="2">
+    <widget class="QRadioButton" name="btn_en">
+     <property name="text">
+      <string>Enable</string>
+     </property>
+     <property name="autoExclusive">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="0">
+    <widget class="QLabel" name="label_mask">
+     <property name="text">
+      <string>Mask:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="2">
+    <widget class="QComboBox" name="combo_type"/>
+   </item>
+   <item row="1" column="0" colspan="2">
+    <widget class="QLabel" name="lbl_name">
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="10" column="0">
+    <widget class="QLabel" name="label_add">
+     <property name="text">
+      <string>Add:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="0">
+    <widget class="QLabel" name="label_type">
+     <property name="text">
+      <string>Type:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="9" column="0">
+    <widget class="QLabel" name="label_mul">
+     <property name="text">
+      <string>Mul:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="0">
+    <widget class="QLabel" name="label_id">
+     <property name="text">
+      <string>Id:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="0">
+    <widget class="QLabel" name="label_offset">
+     <property name="text">
+      <string>Offset:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="2">
     <widget class="QComboBox" name="combo_id">
      <property name="sizeAdjustPolicy">
       <enum>QComboBox::AdjustToContents</enum>
      </property>
     </widget>
    </item>
-   <item row="4" column="0">
-    <widget class="QLabel" name="label">
-     <property name="text">
-      <string>Id</string>
+   <item row="9" column="2">
+    <widget class="QDoubleSpinBox" name="sbox_mul">
+     <property name="decimals">
+      <number>3</number>
+     </property>
+     <property name="value">
+      <double>1.000000000000000</double>
      </property>
     </widget>
    </item>
-   <item row="11" column="1">
+   <item row="7" column="2">
+    <widget class="QComboBox" name="combo_offset"/>
+   </item>
+   <item row="8" column="2">
+    <widget class="QLineEdit" name="le_mask">
+     <property name="text">
+      <string>ffff</string>
+     </property>
+     <property name="maxLength">
+      <number>4</number>
+     </property>
+    </widget>
+   </item>
+   <item row="11" column="2">
     <widget class="QRadioButton" name="btn_swap">
      <property name="text">
       <string>swap</string>

@@ -7,7 +7,7 @@ channel_t::channel_t(uint32_t i, QWidget *parent) : QWidget(parent), idx(i), ui(
 {
 	ui->setupUi(this);
 
-	ui->lbl_name->setText(QString("Channel %1").arg(idx + 1));
+	ui->lbl_name->setText(QString("Ch%1").arg(idx + 1));
 
 	ui->combo_type->addItem("byte");
 	ui->combo_type->addItem("word(le)");
@@ -22,10 +22,20 @@ channel_t::channel_t(uint32_t i, QWidget *parent) : QWidget(parent), idx(i), ui(
 	ui->combo_offset->addItem("6");
 	ui->combo_offset->addItem("7");
 
+	if (idx) {
+
+		ui->label_id->hide();
+		ui->label_type->hide();
+		ui->label_offset->hide();
+		ui->label_mask->hide();
+		ui->label_mul->hide();
+		ui->label_add->hide();
+	}
+
 	connect(ui->btn_en, &QRadioButton::toggled, this, &channel_t::slt_btn_en);
 	connect(ui->combo_offset, SIGNAL(activated(int)), this, SLOT(slt_activated()));
 	connect(ui->combo_type, SIGNAL(activated(int)), this, SLOT(slt_activated()));
-	connect(ui->combo_id, SIGNAL(activated(int)), this, SLOT(slt_activated()));
+	connect(ui->combo_id, SIGNAL(activated(int)), this, SLOT(slt_change_id()));
 	connect(ui->sbox_mul, SIGNAL(valueChanged(double)), this, SLOT(slt_activated()));
 	connect(ui->sbox_add, SIGNAL(valueChanged(double)), this, SLOT(slt_activated()));
 	connect(ui->le_mask, SIGNAL(textChanged(const QString &)), this, SLOT(slt_activated()));
@@ -45,6 +55,23 @@ void channel_t::set_ids(QVector <qid_t> ids)
 	}
 }
 
+void channel_t::set_group(bool en)
+{
+	if (en)
+		ui->combo_offset->setCurrentIndex(idx);
+
+	ui->btn_en->blockSignals(true);
+	ui->btn_en->setChecked(en);
+	ui->btn_en->blockSignals(false);
+	slt_btn_en(en);
+
+	ui->combo_type->setCurrentIndex(0);
+	ui->combo_type->setDisabled(en);
+	ui->btn_en->setDisabled(en);
+	ui->combo_offset->setDisabled(en);
+}
+
+
 void channel_t::slt_btn_en(bool en)
 {
 	if (en) {
@@ -62,6 +89,24 @@ void channel_t::slt_btn_en(bool en)
 	}
 	else
 		emit sig_disabled(idx);
+}
+
+void channel_t::slt_change_id()
+{
+	if (ui->btn_en->isChecked())
+		slt_btn_en(true);
+
+	if (ui->btn_en->isChecked() && !idx)
+		emit sig_change_id(ui->combo_id->currentIndex());
+}
+
+void channel_t::slt_set_id(uint32_t idx)
+{
+	if (ui->btn_en->isChecked()) {
+
+		ui->combo_id->setCurrentIndex(idx);
+		slt_activated();
+	}
 }
 
 void channel_t::slt_activated()

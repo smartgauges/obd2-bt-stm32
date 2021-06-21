@@ -10,7 +10,7 @@
 
 using namespace QtCharts;
 
-#define NUM_CHANNELS 5
+#define NUM_CHANNELS 8
 typedef struct data_t
 {
 	double value;

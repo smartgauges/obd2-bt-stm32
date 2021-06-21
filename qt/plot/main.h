@@ -39,6 +39,8 @@ class main_t : public QMainWindow
 		void slt_channel_disabled(int idx);
 		void slt_step_activated();
 		void slt_btn_opengl(bool);
+		void slt_btn_group(bool);
+		void slt_change_id(uint32_t idx);
 
 	public:
 		main_t(QMainWindow *parent = 0);

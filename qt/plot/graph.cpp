@@ -20,15 +20,15 @@ graph_t::graph_t(QWidget *parent) : QWidget(parent)
 
 	view->chart()->setTheme(QChart::ChartThemeBlueCerulean);
 
-	//QBrush colors[NUM_CHANNELS] = { Qt::white, Qt::red, Qt::green, Qt::blue, Qt::cyan, Qt::magenta, Qt::yellow, Qt::gray, Qt::black };
-	QBrush colors[NUM_CHANNELS] = { Qt::white, Qt::red, Qt::green, Qt::magenta, Qt::cyan };
+	QBrush colors[NUM_CHANNELS] = { Qt::white, Qt::red, Qt::green, Qt::blue, Qt::cyan, Qt::magenta, Qt::yellow, Qt::gray };
+	//QBrush colors[NUM_CHANNELS] = { Qt::white, Qt::red, Qt::green, Qt::magenta, Qt::cyan };
 
 	for (int i = 0; i < NUM_CHANNELS; i++) {
 
 		pen[i].setWidthF(PEN_WIDTH);
 		pen[i].setBrush(colors[i]);
 
-		diagram[i].setName(QString("Channel %1").arg(i + 1));
+		diagram[i].setName(QString("Ch %1").arg(i + 1));
 		diagram[i].setPen(pen[i]);
 		//diagram[i].setPointLabelsVisible(true);
 		//diagram[i].setPointLabelsFormat("(@xPoint, @yPoint)");

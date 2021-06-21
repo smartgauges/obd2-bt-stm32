@@ -27,6 +27,7 @@ main_t::main_t(QMainWindow * parent) : QMainWindow(parent), ui(new Ui::plot)
 	ui->cb_step->addItem("100");
 	connect(ui->cb_step, SIGNAL(activated(int)), this, SLOT(slt_step_activated()));
 	connect(ui->rb_opengl, &QRadioButton::toggled, this, &main_t::slt_btn_opengl);
+	connect(ui->rb_group, &QRadioButton::toggled, this, &main_t::slt_btn_group);
 
 	for (int i = 0; i < NUM_CHANNELS; i++) {
 
@@ -35,6 +36,8 @@ main_t::main_t(QMainWindow * parent) : QMainWindow(parent), ui(new Ui::plot)
 
 		connect(channels[i], &channel_t::sig_enabled, this, &main_t::slt_channel_enabled);
 		connect(channels[i], &channel_t::sig_disabled, this, &main_t::slt_channel_disabled);
+		if (!i)
+			connect(channels[i], &channel_t::sig_change_id, this, &main_t::slt_change_id);
 	}
 
 	connect(ui->btn_open, &QToolButton::clicked, this, &main_t::slt_btn_open);
@@ -217,6 +220,27 @@ void main_t::slt_step_activated()
 void main_t::slt_btn_opengl(bool en)
 {
 	ui->graph->set_opengl(en);
+}
+
+void main_t::slt_btn_group(bool en)
+{
+	for (int i = 0; i < NUM_CHANNELS; i++) {
+
+		channels[i]->slt_btn_en(en);
+		//channels[i]->setEnabled(!en);
+		channels[i]->set_group(en);
+	}
+
+	channels[0]->setEnabled(true);
+}
+
+void main_t::slt_change_id(uint32_t idx)
+{
+	if (ui->rb_group->isChecked()) {
+
+		for (int i = 1; i < NUM_CHANNELS; i++)
+			channels[i]->slt_set_id(idx);
+	}
 }
 
 void main_t::open_file_log(const QString & fileName)
