@@ -31,6 +31,7 @@ class main_t : public QMainWindow
 		QVector < QVector < qmsg_can_t > > msgs;
 		void open_file_csv(const QString & fileName);
 		void open_file_log(const QString & fileName);
+		void open_file_trc(const QString & fileName);
 		qid_t id2name(uint32_t id);
 
 	private slots:

@@ -59,6 +59,8 @@ void main_t::open_file(const QString & fileName)
 		open_file_csv(fileName);
 	else if (fi.suffix() == "log")
 		open_file_log(fileName);
+	else if (fi.suffix() == "trc")
+		open_file_trc(fileName);
 }
 
 qid_t main_t::id2name(uint32_t id)
@@ -387,6 +389,170 @@ void main_t::open_file_log(const QString & fileName)
 	ui->graph->prepare(max_sec);
 }
 
+// CARBUS Analayzer trace format https://canhacker.ru/can-trace-format/ :
+// header
+//@ TEXT @ 2 @ 64 @ 0 @ 591 @ 38782 @ 00:00:38.782 @
+//  2 - format version
+//14,687	1	0004	4E0	8	24 00 00 00 00 00 00 00	00000000	$
+// timestamp: sec,ms - for version 2
+//            sec,us - for version 3
+void main_t::open_file_trc(const QString & fileName)
+{
+	QFile file(fileName);
+	if (!file.open(QIODevice::ReadOnly))
+		return;
+
+	bool ok;
+	int step = ui->cb_step->currentText().toInt(&ok, 10);
+	if (step < 100 || step > 1000)
+		step = 1000;
+
+	ui->graph->clear();
+
+	msgs.clear();
+
+	QByteArray ba = file.readAll();
+
+	ba.replace('\r', '\n');
+
+	QTextStream txt(ba);
+	//read out the header
+	QString line = txt.readLine().toUpper();
+
+	int version = 3; // current default
+	QRegularExpression re("@ TEXT @ (?<version>\\d) @.*");
+	QRegularExpressionMatch match = re.match(line);
+	if (match.hasMatch()) {
+		version = match.captured("version").toInt();
+	}
+
+	int start_sec = -1;
+	int max_sec = 0;
+	while (!txt.atEnd()) {
+
+		QString line = txt.readLine().simplified();
+
+		if (line.isEmpty())
+			continue;
+
+		if (line.length() < 2)
+			continue;
+
+		QList<QString> tokens = line.split(QRegExp("\\s+"));
+		if (tokens.length() <= 4)
+			continue;
+
+		QStringList tlist = tokens[0].split(',');
+
+		if (tlist.size() != 2)
+			continue;
+
+		bool ok;
+		time_t sec = tlist[0].toInt(&ok, 10);
+		uint32_t msec = tlist[1].toInt(&ok, 10);
+		if (version == 3) {
+			msec /= 1000; // us -> ms
+		}
+
+		if (-1 == start_sec)
+			start_sec = sec;
+
+		sec = sec - start_sec;
+
+		qmsg_can_t msg;
+		msg.dev = "can" + tokens[1];
+
+		msg.id = static_cast<uint32_t>(tokens[3].toInt(&ok, 16));
+
+		msg.len = tokens[4].toInt(&ok, 16);
+
+		if (msg.len <= 0 || msg.len > 8)
+			continue;
+
+		//qDebug() << hex << msg.id << msg.len;
+
+		for (int d = 0; d < msg.len; d++)
+		{
+			if (tokens[d + 5] != "")
+			{
+				msg.data[d] = static_cast<unsigned char>(tokens[d + 5].toInt(&ok, 16));
+			}
+			else
+				msg.data[d] = 0;
+		}
+
+		//obd2 hack
+		if (msg.id >= 0x7e8 && msg.id <= 0x7ef) {
+
+			msg.id |= msg.data[2] << 16;
+		}
+
+		//qDebug() << sec << msg.dev << msg.len << hex << msg.id << msg.data[0] << msg.data[1];
+
+		int msg_idx = -1;
+		for (int i = 0; i < msgs.size(); i++) {
+
+			if (msgs[i][0].id == msg.id && msgs[i][0].dev == msg.dev)
+				msg_idx = i;
+		}
+
+		//qDebug() << "msg_idx:" << msg_idx;
+
+		//new id
+		if (msg_idx == -1) {
+
+			msgs.resize(msgs.size() + 1);
+			msg_idx = msgs.size() - 1;
+		}
+		QVector < qmsg_can_t > & vec = msgs[msg_idx];
+		time_t prev_sec = sec;
+		uint32_t prev_msec = msec;
+		uint32_t t_idx = vec.size();
+		//qDebug() << "t_idx:" << t_idx;
+
+		if (t_idx) {
+
+			double prev_t = vec[t_idx - 1].t;
+			prev_sec = prev_t;
+			prev_msec = (prev_t - prev_sec) * 1000;
+		}
+
+		int32_t delta = (sec - prev_sec) * 1000;
+		delta += msec - prev_msec;
+
+		if (delta >= step || !t_idx) {
+
+			prev_sec = sec;
+			prev_msec = msec;
+
+			msg.t = sec + ((double)msec)/1000.0;
+
+			//qDebug() << t << msg.t;
+
+			vec.push_back(msg);
+		}
+
+		max_sec = sec;
+	}
+
+	set_status(QString("file %1 open, %2 ids msgs loaded, step %3ms").arg(fileName).arg(msgs.size()).arg(step));
+
+	file.close();
+
+	QVector < qid_t > ids;
+	for (int i = 0; i < msgs.size(); i++) {
+		qid_t qid = id2name(msgs[i][0].id);
+		qid.name = msgs[i][0].dev + " " + qid.name;
+		ids.push_back(qid);
+	}
+
+	for (int i = 0; i < NUM_CHANNELS; i++) {
+		channels[i]->set_ids(ids);
+	}
+
+	ui->graph->prepare(max_sec);
+}
+
 uint8_t reverse(uint8_t b)
 {
 	b = (b & 0xF0) >> 4 | (b & 0x0F) << 4;
@@ -448,7 +614,7 @@ void main_t::slt_btn_open()
 #ifdef Q_OS_ANDROID
 	fileName = QFileDialog::getOpenFileName(this, tr("Open dump file"), "/sdcard/Downloads", tr("csv (*.csv);;log (*.log)"));
 #else
-	fileName = QFileDialog::getOpenFileName(this, tr("Open dump file"), "./", tr("csv (*.csv);;log (*.log)"));
+	fileName = QFileDialog::getOpenFileName(this, tr("Open dump file"), "./", tr("csv (*.csv);;log (*.log);;trc (*.trc)"));
 #endif
 
 	open_file(fileName);
