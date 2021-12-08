@@ -21,10 +21,10 @@ main_t::main_t(QMainWindow * parent) : QMainWindow(parent), ui(new Ui::plot)
 {
 	ui->setupUi(this);
 
-	ui->cb_step->addItem("1000");
-	ui->cb_step->addItem("500");
-	ui->cb_step->addItem("250");
 	ui->cb_step->addItem("100");
+	ui->cb_step->addItem("250");
+	ui->cb_step->addItem("500");
+	ui->cb_step->addItem("1000");
 	connect(ui->cb_step, SIGNAL(activated(int)), this, SLOT(slt_step_activated()));
 	connect(ui->rb_opengl, &QRadioButton::toggled, this, &main_t::slt_btn_opengl);
 	connect(ui->rb_group, &QRadioButton::toggled, this, &main_t::slt_btn_group);
