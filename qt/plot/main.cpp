@@ -621,7 +621,7 @@ void main_t::slt_btn_open()
 #ifdef Q_OS_ANDROID
 	fileName = QFileDialog::getOpenFileName(this, tr("Open dump file"), "/sdcard/Downloads", tr("csv (*.csv);;log (*.log)"));
 #else
-	fileName = QFileDialog::getOpenFileName(this, tr("Open dump file"), "./", tr("csv (*.csv);;log (*.log);;trc (*.trc)"));
+	fileName = QFileDialog::getOpenFileName(this, tr("Open dump file"), "./", tr("can logs (*.csv *.log *.trc)"));
 #endif
 
 	open_file(fileName);
