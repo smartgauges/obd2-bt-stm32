@@ -428,6 +428,8 @@ void main_t::open_file_trc(const QString & fileName)
 
 	int start_sec = -1;
 	int max_sec = 0;
+	int num_secs = 0;
+	int prev_abs_sec = 0;
 	while (!txt.atEnd()) {
 
 		QString line = txt.readLine().simplified();
@@ -457,7 +459,12 @@ void main_t::open_file_trc(const QString & fileName)
 		if (-1 == start_sec)
 			start_sec = sec;
 
-		sec = sec - start_sec;
+		if (sec == 0 && prev_abs_sec == 59)
+			num_secs += 60;
+
+		prev_abs_sec = sec;
+
+		sec = sec - start_sec + num_secs;
 
 		qmsg_can_t msg;
 		msg.dev = "can" + tokens[1];
@@ -487,7 +494,7 @@ void main_t::open_file_trc(const QString & fileName)
 			msg.id |= msg.data[2] << 16;
 		}
 
-		//qDebug() << sec << msg.dev << msg.len << hex << msg.id << msg.data[0] << msg.data[1];
+		//qDebug() << tokens[0] << sec << ":" << msec << msg.dev << msg.len << hex << msg.id << msg.data[0] << msg.data[1] << msg.data[2] << msg.data[3] << msg.data[4] << msg.data[5] << msg.data[6] << msg.data[7];
 
 		int msg_idx = -1;
 		for (int i = 0; i < msgs.size(); i++) {
@@ -535,7 +542,7 @@ void main_t::open_file_trc(const QString & fileName)
 		max_sec = sec;
 	}
 
-	set_status(QString("file %1 open, %2 ids msgs loaded, step %3ms").arg(fileName).arg(msgs.size()).arg(step));
+	set_status(QString("file %1 open version %2, %3 ids msgs loaded, step %4ms").arg(fileName).arg(version).arg(msgs.size()).arg(step));
 
 	file.close();
 
